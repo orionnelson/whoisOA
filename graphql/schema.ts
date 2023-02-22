@@ -1,10 +1,10 @@
 export const resolvers = {
     Query: {
-      ip: async (_, { address }, { dataSources }) => {
+      ip: async (_: any, { address }: { address: string }, { dataSources }: { dataSources: any }) => {
         return dataSources.whoisAPI.getIP(address);
       },
-      domain: async (_, { name }, { dataSources }) => {
-        return dataSources.whoisAPI.getDomain(name);
+      website: async (_: any, { url }: { url: string }, { dataSources }: { dataSources: any }) => {
+        return dataSources.whoisAPI.getWebsite(url);
       },
     },
   };

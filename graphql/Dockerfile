@@ -1,13 +1,17 @@
 FROM node:latest
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
 
-RUN npm install --frozen-lockfile
+COPY --chown=node:node package*.json ./
 
-COPY . .
+
+RUN npm install
+
+COPY --chown=node:node . .
+RUN npm run tsc
+USER node
 
 EXPOSE 5000
 
-CMD ["node", "index.ts"]
+CMD ["node", "index.js"]
