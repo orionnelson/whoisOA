@@ -49,6 +49,10 @@ app.use(
   }),
 );
 
+
+async function awaitServer2() {
+  await new Promise<void>((resolve) => httpServer.listen({ port: port }, resolve));
+  console.log(`🚀 Server ready at http://localhost:%d/`,(String)(port));
+}
 // Modified server startup
-await new Promise<void>((resolve) => httpServer.listen({ port: port }, resolve));
-console.log(`🚀 Server ready at http://localhost:%d/`,(String)(port));
+awaitServer2();
