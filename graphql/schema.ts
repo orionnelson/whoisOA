@@ -1,3 +1,4 @@
+/*
 export const resolvers = {
     Query: {
       ip: async (_: any, { address }: { address: string }, { dataSources }: { dataSources: any }) => {
@@ -8,6 +9,7 @@ export const resolvers = {
       },
     },
   };
+  */
 
 export const typeDefs =`#graphql
   type IP {
