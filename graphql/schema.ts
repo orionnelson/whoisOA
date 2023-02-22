@@ -9,7 +9,7 @@ export const resolvers = {
     },
   };
 
-export const typeDefs = `
+export const typeDefs =`#graphql
   type IP {
     address: String!
     whois: WHOIS!
@@ -42,53 +42,4 @@ export const typeDefs = `
   type Query {
     ip(address: String!): IP
     website(url: String!): Website
-  }
-
-    type Movie {
-      id: ID!
-      title: String!
-      year: Int!
-    }
-  
-    type User {
-      id: ID!
-      name: String!
-      email: String!
-    }
-  
-    type Query {
-      movie(id: ID!): Movie
-      movies(year: Int): [Movie]
-      user(id: ID!): User
-    }
-  
-    type Mutation {
-      createUser(name: String!, email: String!): User
-      updateUser(id: ID!, name: String, email: String): User
-      deleteUser(id: ID!): User
-    }
-  `;
-  /*
-  type Movie {
-    id: ID!
-    title: String!
-    year: Int!
-  }
-
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-  }
-
-  type Query {
-    movie(id: ID!): Movie
-    movies(year: Int): [Movie]
-    user(id: ID!): User
-  }
-
-  type Mutation {
-    createUser(name: String!, email: String!): User
-    updateUser(id: ID!, name: String, email: String): User
-    deleteUser(id: ID!): User
-  }*/
+  }`;
