@@ -3,9 +3,9 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+      - "6379:6379"
     environment:
       - NODE_ENV=production
   frontend:

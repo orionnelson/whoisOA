@@ -30,7 +30,11 @@ const server = new ApolloServer<MyContext>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 // Ensure we wait for our server to start
-await server.start();
+async function startServer() {
+  await server.start();
+}
+
+startServer();
 
 // Set up our Express middleware to handle CORS, body parsing,
 // and our expressMiddleware function.
