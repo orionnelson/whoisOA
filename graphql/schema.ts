@@ -4,6 +4,7 @@ import sift from "sift";
 import { fileURLToPath } from "url";
 import gql from 'graphql-tag';
 // Read the schema file
+import {WhoisAPI} from './whois-api.js'
 
 const schema = fs.readFileSync(
   path.join(path.dirname(fileURLToPath(import.meta.url)), "./schema.graphqls"),
@@ -321,15 +322,33 @@ export const resolvers = {
       const whois: WHOIS = { domainName: json.domain_name, domainStatus: json.domain_status, registrar, creationDate: json.creation_date, expirationDate: json.registry_expiry_date, updatedDate: json.updated_date, location, registrant, nameServers };
       return whois;
     }
-  export const resolvers = {
-    Query: {
-      ip: (_parent: any, args: { address: string }) => {
-        return ip_items.find((ip) => ip.address === args.address) ?? null;
+
+    export const resolvers = {
+      Query: {
+        ip: async (_parent: any, args: { address: string }) => {
+          const whoisAPI = new WhoisAPI();
+          const result = await whoisAPI.getInformation(args.address);
+          if (result.success && result.data) {
+            const whois = mapJsonToSchema(result.data);
+            const ip = { address: args.address, whois };
+            ip_items.push(ip);
+            return ip;
+          } else {
+            return null;
+          }
+        },
+        website: async (_parent: any, args: { url: string }) => {
+          const whoisAPI = new WhoisAPI();
+          const result = await whoisAPI.getInformation(args.url);
+          if (result.success && result.data) {
+            const whois = mapJsonToSchema(result.data);
+            const website = { url: args.url, whois };
+            website_items.push(website);
+            return website;
+          } else {
+            return null;
+          }
+        },
       },
-      website: (_parent: any, args: { url: string }) => {
-        return website_items.find((site) => site.url === args.url) ?? null;
-      },
-    },
-  };
-  
+    };
 

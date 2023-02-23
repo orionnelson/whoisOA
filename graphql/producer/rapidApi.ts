@@ -21,18 +21,19 @@ reqRapidWhois('sendrank.com')
         'X-RapidAPI-Host': RAPID_API_HOST
       }
     };
-  
+
     try {
       const response = await axios.request(options);
       if (response.status === 200) {
-        const raw_data = response.data;
-        const data;
+        const raw_data: string = response.data;
+        let data;
         try {
-          data = JSON.parse(raw_data);
+          data: JSON = JSON.parse(raw_data);
+          console.log(data);
         } catch (error) {
           return { success: false, error: "Invalid JSON data received from API" };
         }
-        if (data && data.Registrar) {
+        if (data ) {
           return { success: true, data };
         } else {
           return { success: false, error: "No whois information found for the domain" };

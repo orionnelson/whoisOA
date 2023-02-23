@@ -1,6 +1,6 @@
 
 import { exec } from "child_process";
-import { WhoisResponse } from "../whois-api.js";
+import { WhoisResponse, WhoisData } from "../whois-api.js";
 /*
 async function main() {
   const domain = "example.com";
@@ -21,7 +21,7 @@ export async function getWhoisData(domain: string): Promise<WhoisResponse> {
           resolve({ success: false, error: error?.message ?? stderr ?? "Unknown error" });
         } else {
           try {
-            const data : JSON = JSON.parse(stdout);
+            const data : any = JSON.parse(stdout);
             resolve({ success: true, data });
           } catch (e) {
             resolve({ success: false, error: "Invalid JSON output" });

@@ -10,7 +10,8 @@ export interface WhoisResponse {
   data?: WhoisData;
   error?: string;
 }
-class WhoisAPI extends RESTDataSource {
+export class WhoisAPI extends RESTDataSource {
+
 // combine both data sources into one json object and return it
 async getInformation(address: string): Promise<WhoisResponse> {
   const response = await getWhoisData(address);
