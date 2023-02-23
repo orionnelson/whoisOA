@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-//import { typeDefs, resolvers } from './schema';
+import { typeDefs, resolvers } from './schema.js';
 
 
 
@@ -8,7 +8,7 @@ const ports: string = process.env.APOLLO_PORT || '5000'
 const port: number = parseInt(ports,10)
 
 
-
+/*
 
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
@@ -40,7 +40,7 @@ const resolvers = {
   Query: {
     books: () => books,
   },
-};
+};*/
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
@@ -56,4 +56,4 @@ const { url } = await startStandaloneServer(server, {
   listen: { port: port },
 });
 
-//console.log(`🚀  Server ready at: ${url}`);
+console.log(`🚀  Server ready at: ${url}`);

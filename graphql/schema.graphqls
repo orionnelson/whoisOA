@@ -1,0 +1,33 @@
+type IP {
+    address: String!
+    whois: WHOIS!
+  }
+
+  type Website {
+    url: String!
+    whois: WHOIS!
+  }
+
+  type WHOIS {
+    registrar: String
+    creationDate: String
+    expirationDate: String
+    updatedDate: String
+    registrant: Registrant
+  }
+
+  type Registrant {
+    name: String
+    email: String
+    organization: String
+    address: String
+    city: String
+    state: String
+    zip: String
+    country: String
+  }
+
+  type Query {
+    ip(address: String!): IP
+    website(url: String!): Website
+  }

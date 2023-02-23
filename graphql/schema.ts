@@ -1,3 +1,16 @@
+import fs from "fs";
+import path from "path";
+import sift from "sift";
+import { fileURLToPath } from "url";
+import gql from 'graphql-tag';
+// Read the schema file
+
+const schema = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), "./schema.graphqls"),
+  "utf8"
+);
+
+export const typeDefs = gql(schema);
 /*
 export const resolvers = {
     Query: {
@@ -38,11 +51,11 @@ export const resolvers = {
     url: string;
     whois: WHOIS;
   }
+  /*
   // A schema is a collection of type definitions (hence "typeDefs")
   // that together define the "shape" of queries that are executed against
   // your data.
-  /*
-  const typeDefs = `#graphql
+  export const typeDefs = `#graphql
     # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
   
     # This "Book" type defines the queryable fields for every book in our data source.
@@ -71,7 +84,7 @@ export const resolvers = {
   ];
   // Resolvers define how to fetch the types defined in your schema.
   // This resolver retrieves books from the "books" array above.
-  const resolvers = {
+  export const resolvers = {
     Query: {
       books: () => books,
     },
@@ -172,39 +185,4 @@ export const resolvers = {
     },
   };
   
-  
 
-export const typeDefs =`#graphql
-  type IP {
-    address: String!
-    whois: WHOIS!
-  }
-
-  type Website {
-    url: String!
-    whois: WHOIS!
-  }
-
-  type WHOIS {
-    registrar: String
-    creationDate: String
-    expirationDate: String
-    updatedDate: String
-    registrant: Registrant
-  }
-
-  type Registrant {
-    name: String
-    email: String
-    organization: String
-    address: String
-    city: String
-    state: String
-    zip: String
-    country: String
-  }
-
-  type Query {
-    ip(address: String!): IP
-    website(url: String!): Website
-  }`;

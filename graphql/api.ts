@@ -53,7 +53,7 @@ export async function requestIporDomain(address: string): Promise<WhoisResponse>
     } else {
       return { success: false, error: "Unexpected response status code: " + response.status };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { success: false, error: error.message };
   }
