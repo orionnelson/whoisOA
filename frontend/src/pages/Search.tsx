@@ -83,7 +83,7 @@ export function Search() {
     </div>
   ) : (
     <div className="countryDisplay">
-      <h3>https://www.example.org or https://www.example.org  </h3>
+      <h3>https://www.example.com or https://www.example.org  </h3>
     </div>
   );
 
