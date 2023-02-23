@@ -325,6 +325,19 @@ export const resolvers = {
 
     export const resolvers = {
       Query: {
+        ip: (_parent: any, args: { address: string }) => {
+          return ip_items.find((ip) => ip.address === args.address) ?? null;
+        },
+        website: (_parent: any, args: { url: string }) => {
+          return website_items.find((site) => site.url === args.url) ?? null;
+        },
+      },
+    };
+
+
+/*
+    export const resolvers = {
+      Query: {
         ip: async (_parent: any, args: { address: string }) => {
           const whoisAPI = new WhoisAPI();
           const result = await whoisAPI.getInformation(args.address);
@@ -351,4 +364,4 @@ export const resolvers = {
         },
       },
     };
-
+*/
