@@ -5,12 +5,13 @@ import {ApolloClient, InMemoryCache,ApolloProvider} from '@apollo/client';
 import {Search} from './pages/Search';
 import {Result} from './pages/Result';
 
+const BACKEND_URI: string = process.env.BACKEND_URI || 'http://localhost:5000/';
 
 function App() {
 
   const client = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: 'http://localhost:5000/',
+    uri: BACKEND_URI,
   });
 
   return (
