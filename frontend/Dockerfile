@@ -1,14 +1,15 @@
 # base image
 FROM node:latest AS base
+USER node
 WORKDIR /usr/src/app
-COPY --chown=node:node package*.json ./
-RUN yarn install --frozen-lockfile
+COPY --chown=node:node package.json ./
+COPY --chown=node:node yarn.lock ./
+RUN yarn install
 
 # build image
 FROM base AS build
 COPY --chown=node:node . .
 USER node
-
 CMD ["yarn", "start"]
 
 # production image

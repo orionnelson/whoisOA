@@ -1,0 +1,62 @@
+type IP {
+  address: String!
+  whois: WHOIS!
+}
+
+type Website {
+  url: String!
+  whois: WHOIS!
+}
+
+type WHOIS {
+  domainName: String
+  domainStatus: String
+  registrar: Registrar
+  creationDate: String
+  expirationDate: String
+  updatedDate: String
+  location: Location
+  registrant: Person
+  nameServers: [NameServer!]
+}
+
+type NameServer {
+  name: String
+}
+
+type Registrar {
+  name: String
+  url: String
+  abuseContactEmail: String
+  abuseContactPhone: String
+  whoisServer: String
+}
+
+type Location {
+  position: Position
+  ip: String
+  network: String
+  org: String
+  flagurl: String
+}
+
+type Position {
+  latitude: String
+  longitude: String
+}
+
+type Person {
+  name: String
+  email: String
+  organization: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  country: String
+}
+
+type Query {
+  ip(address: String!): IP
+  website(url: String!): Website
+}
