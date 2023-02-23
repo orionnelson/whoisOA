@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_GRAPHQL_ENDPOINT=http://backend:5000/graphql
+      - BACKEND_URI=http://localhost:5000
     depends_on:
       - graphql
   db:
