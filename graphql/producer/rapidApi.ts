@@ -15,7 +15,7 @@ reqRapidWhois('sendrank.com')
     const options = {
       method: 'GET',
       url: RAPID_URL,
-      params: { domai: address, format: 'json', apikey: '873dbe322aea47f89dcf729dcc8f60e8' },
+      params: { domain: address, format: 'json', apikey: '873dbe322aea47f89dcf729dcc8f60e8' },
       headers: {
         'X-RapidAPI-Key': RAPID_API_KEY,
         'X-RapidAPI-Host': RAPID_API_HOST
@@ -28,7 +28,7 @@ reqRapidWhois('sendrank.com')
         const raw_data: string = response.data;
         let data;
         try {
-          data: JSON = JSON.parse(raw_data);
+          data = JSON.parse(raw_data);
           console.log(data);
         } catch (error) {
           return { success: false, error: "Invalid JSON data received from API" };
