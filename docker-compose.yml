@@ -22,6 +22,8 @@ services:
       context: ./graphql
     ports:
       - "5000:5000"
+    network_mode: "host"
+
     environment:
       - DATABASE_URL=postgres://postgres:example@db:5432/example
       - CORS_ORIGIN=http://localhost/3000
@@ -30,6 +32,16 @@ services:
       - db
     links:
       - db
+  whois:
+    build:
+      context: ./whois
+    ports:
+      - "5001:5001"
+    environment:
+      - GEOIP_USER_ID=832978
+      - GEOIP_LICENSE_KEY=9E7E2BCtGW4Prbre
+      - APOLLO_PORT=5001
+      - GEOIP_DIRECTORY=/app/GeoIP
 
   unit-test:
     image: node:latest
