@@ -3,6 +3,20 @@
   command = "npm install && npm run tsc"
   publish = "/"
 
+
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
+  environment = { NODE_VERSION = "18.14.2" }
+
+# Dev context: environment variables set here 
+# are available for local development environments 
+# run using Netlify Dev. These values can be 
+# overwritten on branches that have a more specific 
+# branch context configured.
+[context.dev.environment]
+  NODE_ENV = "development"
+  environment = { NODE_VERSION = "18.14.2" }
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -20,6 +34,5 @@
   status = 200
 
 [dev]
-  base = "./graphql"
-  command = "node index.js"
+  command = "npx index.js"
   port = 5000
