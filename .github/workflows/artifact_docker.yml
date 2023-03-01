@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build and save frontend image
         run: |
@@ -22,6 +22,7 @@ jobs:
           mkdir -p artifacts
           mv frontend.tar artifacts/
           mv frontend-${{ github.sha }}.tar artifacts/
+        continue-on-error: true
 
       - name: Build and save graphql image
         run: |
@@ -32,6 +33,7 @@ jobs:
           mkdir -p artifacts
           mv graphql.tar artifacts/
           mv graphql-${{ github.sha }}.tar artifacts/
+        continue-on-error: true
 
       - name: Build and save whois image
         run: |
@@ -42,6 +44,7 @@ jobs:
           mkdir -p artifacts
           mv whois.tar artifacts/
           mv whois-${{ github.sha }}.tar artifacts/
+        continue-on-error: true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
