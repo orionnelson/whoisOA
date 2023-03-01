@@ -1,0 +1,50 @@
+name: Build and publish Docker images as GitHub Artifacts
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and save frontend image
+        run: |
+          docker build -t frontend:latest ./frontend
+          docker tag frontend:latest frontend:${{ github.sha }}
+          docker save frontend:latest > frontend.tar
+          docker save frontend:${{ github.sha }} > frontend-${{ github.sha }}.tar
+          mkdir -p artifacts
+          mv frontend.tar artifacts/
+          mv frontend-${{ github.sha }}.tar artifacts/
+
+      - name: Build and save graphql image
+        run: |
+          docker build -t graphql:latest ./graphql
+          docker tag graphql:latest graphql:${{ github.sha }}
+          docker save graphql:latest > graphql.tar
+          docker save graphql:${{ github.sha }} > graphql-${{ github.sha }}.tar
+          mkdir -p artifacts
+          mv graphql.tar artifacts/
+          mv graphql-${{ github.sha }}.tar artifacts/
+
+      - name: Build and save whois image
+        run: |
+          docker build -t whois:latest ./whois
+          docker tag whois:latest whois:${{ github.sha }}
+          docker save whois:latest > whois.tar
+          docker save whois:${{ github.sha }} > whois-${{ github.sha }}.tar
+          mkdir -p artifacts
+          mv whois.tar artifacts/
+          mv whois-${{ github.sha }}.tar artifacts/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-images
+          path: artifacts/
