@@ -1,7 +1,7 @@
 [build]
   base = "./graphql"
   command = "npm install && npm run tsc && node index.js &"
-  publish = "/graphql"
+  publish = "/"
 
 [[redirects]]
   from = "/*"
