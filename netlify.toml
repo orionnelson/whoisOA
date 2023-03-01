@@ -1,11 +1,11 @@
 [build]
-  image = "docker:latest"
-  command = "docker build -t graphql-image ./graphql"
-  publish = "public"
+  base = "./graphql"
+  command = "npm install && npm run tsc && node index.js &"
+  publish = "/graphql"
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/index.js"
   status = 200
 
 [[redirects]]
