@@ -1,0 +1,13 @@
+[build]
+  command = "docker build -t graphql-image ./graphql"
+  publish = "public"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:5000/:splat"
+  status = 200
