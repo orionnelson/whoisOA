@@ -20,5 +20,6 @@
   status = 200
 
 [dev]
+  base = "./graphql"
   command = "node index.js"
   port = 5000
