@@ -1,14 +1,24 @@
 [build]
   base = "./graphql"
-  command = "npm install && npm run tsc && node index.js &"
+  command = "npm install && npm run tsc"
   publish = "/"
 
 [[redirects]]
   from = "/*"
-  to = "/index.js"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
   from = "/api/*"
   to = "http://localhost:5000/:splat"
   status = 200
+  
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "node index.js"
+  port = 5000
