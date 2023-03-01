@@ -1,4 +1,5 @@
 [build]
+  image = "docker:latest"
   command = "docker build -t graphql-image ./graphql"
   publish = "public"
 
