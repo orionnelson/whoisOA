@@ -46,6 +46,6 @@ jobs:
           name: docker-images
           path: |
             sha.txt
-            ${{ steps.frontend.outputs.tar }}
-            ${{ steps.graphql.outputs.tar }}
-            ${{ steps.whois.outputs.tar }}
+            frontend.tar
+            whois.tar
+            graphql.tar
