@@ -2,6 +2,7 @@ FROM golang:alpine as build
 
 ARG GEOIPUPDATE_VERSION=main
 ARG GEOIP_DIRECTORY=/app/GeoIP
+ARG PORT=5001
 # install git and clone repo
 RUN apk add --update curl git
 RUN git clone https://github.com/maxmind/geoipupdate.git /tmp/build
@@ -51,8 +52,9 @@ COPY whois.py .
 COPY whois_utils.py .
 COPY geoip.sh .
 COPY geoloader.py .
+COPY app_functions.py .
 
-EXPOSE 5001
+EXPOSE ${PORT}
 
 CMD ["/bin/sh", "-c", ". geoip.sh && chmod  -R 755 /app/GeoIP && python3 app.py"]
 #CMD ["/geoip.sh"]

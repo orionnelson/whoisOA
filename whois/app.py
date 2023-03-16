@@ -2,6 +2,7 @@ from flask import Flask, request
 from whois import process_whois_content
 from whois_utils import dump_json, sanitize_input, matches_ip, matches_url
 from geoloader import GeoIP
+from app_functions import domain_nslookup, extract_ips, domain_whoislookup
 import json
 app = Flask(__name__)
 
@@ -21,15 +22,15 @@ def whois(domain):
         #Sanitize input failed domain is not valid ip or domain
         return str(e), 500
     if matches_url(domain):
-        nsresult = subprocess.run(['nslookup', domain], capture_output=True, text=True)
+        # Nslookup Abstraction Returns ips associated with domain
+        nsresult = domain_nslookup(domain)
         # Look for the Address: line in the nslookup output
         if nsresult.returncode != 0:
             return str(nsresult.stderr), 500
         else:
             try:
-                ns_important = [line for line in nsresult.stdout.split("answer",1)[-1].splitlines() if "Address:" in line]
                 # Get the ip address from the Address: line
-                ips = [line.split(":",1)[-1].strip() for line in ns_important]
+                ips = extract_ips(nsresult)
             except Exception as e:
                 return str(e), 500
         # Get the whois information for the ip address
@@ -37,7 +38,7 @@ def whois(domain):
     else:
         default_save_string = "ipv4"
 
-    result = subprocess.run(['whois', domain], capture_output=True, text=True)
+    result = domain_whoislookup(domain)
     if result.returncode != 0:
         return str(result.stderr), 500
     else:
@@ -67,4 +68,6 @@ def whois(domain):
         return whoisresults, 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    import os
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port)

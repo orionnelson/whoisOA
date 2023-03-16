@@ -73,3 +73,19 @@ def camel_to_snake_case(string: str):
 def open_whois_pipe(name: str):
     result = subprocess.run([WHOIS_PATH,"-nobanner", name], capture_output=True, text=True)
     return result
+
+def dictTuple(listTuple: list, important_keys: list):
+    #(wanted,addlist)
+    #(not_wanted,dictassignment)
+    d = {}
+    for key, value in listTuple:
+        if key in important_keys:
+            if key in d and isinstance(d[key], list):
+                d[key].append(value)
+            elif key in d and not isinstance(d[key], list):
+                d[key] = [d[key], value]
+            else:
+                d[key] = value
+        else:
+            d[key] = value
+    return d
