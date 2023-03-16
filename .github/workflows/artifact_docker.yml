@@ -12,32 +12,38 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
+      - name: Export build_and_save_docker_image function
+        run: |
+          build_and_save_docker_image() {
+            DOCKERFILE_PATH=$1
+            IMAGE_NAME=$2
+            FILE_NAME_REGEX=".+/(.+)\.tar$"
+            docker build -t ${IMAGE_NAME}:latest ${DOCKERFILE_PATH}
+            docker save ${IMAGE_NAME}:latest > ${IMAGE_NAME}.tar
+            if [[ ${IMAGE_NAME}.tar =~ $FILE_NAME_REGEX ]]; then
+              FILE_NAME="${BASH_REMATCH[1]}"
+              echo -n "${FILE_NAME} MD5: " >> sha.txt && md5sum ${IMAGE_NAME}.tar | awk '{ print $1 }' >> sha.txt
+            fi
+          }
+          export -f build_and_save_docker_image
 
       - name: Build and save frontend image
         id: frontend
         run: |
-          docker build -t frontend:latest ./frontend
-          docker tag frontend:latest frontend:${{ github.sha }}
-          docker save frontend:${{ github.sha }} > frontend.tar
-          echo ${{ github.sha }} >> sha.txt
+           build_and_save_docker_image ./frontend frontend
         continue-on-error: true
 
       - name: Build and save graphql image
         id: graphql
         run: |
-          docker build -t graphql:latest ./graphql
-          docker tag graphql:latest graphql:${{ github.sha }}
-          docker save graphql:${{ github.sha }} > graphql.tar
-          echo ${{ github.sha }} >> sha.txt
+          build_and_save_docker_image ./graphql graphql
         continue-on-error: true
 
       - name: Build and save whois image
         id: whois
         run: |
-          docker build -t whois:latest ./whois
-          docker tag whois:latest whois:${{ github.sha }}
-          docker save whois:${{ github.sha }} > whois.tar
-          echo ${{ github.sha }} >> sha.txt
+          build_and_save_docker_image ./whois whois
         continue-on-error: true
 
       - name: Upload artifacts
