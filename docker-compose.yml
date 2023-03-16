@@ -36,11 +36,11 @@ services:
     build:
       context: ./whois
     ports:
-      - "5001:5001"
+      - "${FLASK_PORT:-5001}:${FLASK_PORT:-5001}"
     environment:
-      - GEOIP_USER_ID=832978
-      - GEOIP_LICENSE_KEY=9E7E2BCtGW4Prbre
-      - APOLLO_PORT=5001
+      - GEOIP_USER_ID=${{ secrets.GEOIP_USER_ID }}
+      - GEOIP_LICENSE_KEY=${{ secrets.GEOIP_LICENSE_KEY }}
+      - PORT=${FLASK_PORT:-5001}
       - GEOIP_DIRECTORY=/app/GeoIP
 
   unit-test:
