@@ -2,7 +2,7 @@
 FROM node:latest AS base
 USER node
 WORKDIR /usr/src/app
-RUN sudo chown -R node:node /usr/src/app
+RUN chown -R node:node /usr/src/app
 COPY --chown=node:node package.json ./
 COPY --chown=node:node yarn.lock ./
 RUN yarn install
