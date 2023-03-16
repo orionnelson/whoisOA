@@ -21,7 +21,7 @@ jobs:
           build_and_save_docker_image() {
             DOCKERFILE_PATH=$1
             IMAGE_NAME=$2
-            FILE_NAME_REGEX=".+/(.+)\.tar$"
+            FILE_NAME_REGEX="[A-z]+.tar$"
             docker build -t ${IMAGE_NAME}:latest ${DOCKERFILE_PATH}
             docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:latest
             docker save ${IMAGE_NAME}:latest > ${IMAGE_NAME}.tar
