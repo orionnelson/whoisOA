@@ -15,37 +15,42 @@ jobs:
         
       - name: Export build_and_save_docker_image function
         run: |
+          cat << 'EOF' > build_and_save_docker_image.sh
+          #!/bin/bash
+
           build_and_save_docker_image() {
             DOCKERFILE_PATH=$1
             IMAGE_NAME=$2
             FILE_NAME_REGEX=".+/(.+)\.tar$"
             docker build -t ${IMAGE_NAME}:latest ${DOCKERFILE_PATH}
+            docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:latest
             docker save ${IMAGE_NAME}:latest > ${IMAGE_NAME}.tar
             if [[ ${IMAGE_NAME}.tar =~ $FILE_NAME_REGEX ]]; then
               FILE_NAME="${BASH_REMATCH[1]}"
               echo -n "${FILE_NAME} MD5: " >> sha.txt && md5sum ${IMAGE_NAME}.tar | awk '{ print $1 }' >> sha.txt
             fi
           }
-          export -f build_and_save_docker_image
+          EOF
+          chmod +x build_and_save_docker_image.sh
 
       - name: Build and save frontend image
         id: frontend
         run: |
-           source <(cat $GITHUB_ACTION_PATH | sed '0,/^#!/d')
+           source ./build_and_save_docker_image.sh
            build_and_save_docker_image ./frontend frontend
         continue-on-error: true
 
       - name: Build and save graphql image
         id: graphql
         run: |
-          source <(cat $GITHUB_ACTION_PATH | sed '0,/^#!/d')
+          source ./build_and_save_docker_image.sh
           build_and_save_docker_image ./graphql graphql
         continue-on-error: true
 
       - name: Build and save whois image
         id: whois
         run: |
-          source <(cat $GITHUB_ACTION_PATH | sed '0,/^#!/d')
+          source ./build_and_save_docker_image.sh
           build_and_save_docker_image ./whois whois
         continue-on-error: true
 
