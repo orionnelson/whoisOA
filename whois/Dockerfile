@@ -32,10 +32,16 @@ COPY --from=build /tmp/build/cmd/geoipupdate/geoipupdate /usr/bin/
 
 
 
-# Download Whois Testing
-RUN echo "@testing http://dl-3.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk update && \
-    apk add whois@testing python3 py3-pip && \
+# Download Whois Testing echo "@testing https://dl-3.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
+RUN apk update
+
+RUN apk add --no-cache whois@testing python3 py3-pip 
+
+RUN python3 -m venv env
+
+RUN . /env/bin/activate && \
     pip3 install Flask && \
     pip3 install regex && \
     pip3 install geoip2
@@ -56,7 +62,7 @@ COPY app_functions.py .
 
 EXPOSE ${PORT}
 
-CMD ["/bin/sh", "-c", ". geoip.sh && chmod  -R 755 /app/GeoIP && python3 app.py"]
+CMD ["/bin/sh", "-c", ". geoip.sh && chmod  -R 755 /app/GeoIP && . /env/bin/activate && python3 app.py"]
 #CMD ["/geoip.sh"]
 #ENTRYPOINT ["python3"]
 #CMD ["app.py"]

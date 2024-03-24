@@ -22,7 +22,7 @@ services:
       context: ./graphql
     ports:
       - "5000:5000"
-    network_mode: "host"
+    #network_mode: "host"
 
     environment:
       - DATABASE_URL=postgres://postgres:example@db:5432/example
@@ -38,8 +38,8 @@ services:
     ports:
       - "${FLASK_PORT:-5001}:${FLASK_PORT:-5001}"
     environment:
-      - GEOIP_USER_ID=${{ secrets.GEOIP_USER_ID }}
-      - GEOIP_LICENSE_KEY=${{ secrets.GEOIP_LICENSE_KEY }}
+      - GEOIP_USER_ID=${GEOIP_USER_ID}
+      - GEOIP_LICENSE_KEY=${GEOIP_LICENSE_KEY}
       - PORT=${FLASK_PORT:-5001}
       - GEOIP_DIRECTORY=/app/GeoIP
 
