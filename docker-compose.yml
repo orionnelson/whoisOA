@@ -7,15 +7,19 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - BACKEND_URI=http://localhost:5000
+      - BACKEND_URI=http://graphql:5000
     depends_on:
       - graphql
+    networks:
+      - frontend-to-graphql
   db:
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: example
+    networks:
+      - graphql-to-db
   
   graphql:
     build:
@@ -26,12 +30,15 @@ services:
 
     environment:
       - DATABASE_URL=postgres://postgres:example@db:5432/example
-      - CORS_ORIGIN=http://localhost/3000
+      - CORS_ORIGIN=http://frontend/3000
       - APOLLO_PORT=5000
+      - L_API_URL=http://whois:5001
     depends_on:
       - db
-    links:
-      - db
+    networks:
+      - graphql-to-db
+      - frontend-to-graphql
+      - graphql-to-whois
   whois:
     build:
       context: ./whois
@@ -42,6 +49,8 @@ services:
       - GEOIP_LICENSE_KEY=${GEOIP_LICENSE_KEY}
       - PORT=${FLASK_PORT:-5001}
       - GEOIP_DIRECTORY=/app/GeoIP
+    networks:
+      - graphql-to-whois
 
   unit-test:
     image: node:latest
@@ -53,3 +62,11 @@ services:
       - NODE_ENV=test
     depends_on:
       - graphql
+    networks:
+      - frontend-to-graphql
+
+
+networks:
+  frontend-to-graphql:
+  graphql-to-db:
+  graphql-to-whois:
