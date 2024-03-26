@@ -1,7 +1,8 @@
 
 import { RESTDataSource } from '@apollo/datasource-rest';
-import {reqRapidWhois} from './producer/rapidApi.js'
-import {getWhoisData} from './producer/sysApi.js'
+//import {reqRapidWhois} from './producer/rapidApi.js';
+import { reqWhois } from './producer/lnetApi.js';
+//import {getWhoisData} from './producer/sysApi.js'
 export interface WhoisData {
   [key: string]: string;
 }
@@ -14,24 +15,19 @@ export class WhoisAPI extends RESTDataSource {
 
 // combine both data sources into one json object and return it
 async getInformation(address: string): Promise<WhoisResponse> {
-  const response = await getWhoisData(address);
-  if (response.success && response.data) {
-    // Use the retrieved whois data
-    const whoisData = response.data;
-
+  //const response = await getWhoisData(address);
+  console.log(`Fetching WHOIS information for address: ${address}`);
+  //if (response.success && response.data) {
+  // Use the retrieved whois data
     // Wait for the response from the RapidapiAPI
-    const rapidApiResponse = await reqRapidWhois(address);
-    if (rapidApiResponse.success && rapidApiResponse.data) {
+    const lApiResponse = await reqWhois(address);
+    console.log(`data loaded: ${lApiResponse.data} `);
+    if (lApiResponse.success && lApiResponse.data) {
       // Combine the data from both sources
-      const combinedData = { ...whoisData, ...rapidApiResponse.data };
-      return { success: true, data: combinedData };
+      return { success: true, data: lApiResponse.data };
     } else {
       // Handle the error from the RapidAPI call
-      return { success: false, error: rapidApiResponse.error };
+      return { success: false, error: lApiResponse.error };
     }
-  } else {
-    // Handle the error from the sysApi call
-    return { success: false, error: response.error };
-  }
 }
 }

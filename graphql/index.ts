@@ -1,7 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs, resolvers } from './schema.js';
-
+import { WhoisAPI } from './whois-api.js';
 
 
 const ports: string = process.env.APOLLO_PORT || '5000'
@@ -54,6 +54,13 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
   listen: { port: port },
+  context: async () => {
+    return {
+      dataSources: {
+        whoisAPI: new WhoisAPI(),
+      },
+    };
+  },
 });
 
 console.log(`🚀  Server ready at: ${url}`);
