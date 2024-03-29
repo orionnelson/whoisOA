@@ -4,13 +4,14 @@ WORKDIR /usr/src/app
 
 
 COPY --chown=node:node package*.json ./
-
-
-RUN npm install
+USER root
+RUN npm install -g typescript
 
 COPY --chown=node:node . .
-RUN npm run tsc
+RUN chown -R node:node /usr/src/app
 USER node
+RUN npm install @types/node
+RUN tsc
 
 EXPOSE 5000
 
