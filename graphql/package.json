@@ -18,7 +18,11 @@
         "graphql": "^16.6.0",
         "graphql-codegen": "^0.4.0",
         "graphql-tag": "^2.12.6",
-        "sift": "^16.0.1"
+        "sift": "^16.0.1",
+        "@prisma/client": "^4.10.1",
+        "@types/node": "^18.14.0",
+        "concurrently": "^7.6.0",
+        "typescript": "^4.9.5"
     },
     "devDependencies": {
         "@prisma/client": "^4.10.1",
