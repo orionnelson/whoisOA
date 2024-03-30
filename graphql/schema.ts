@@ -3,6 +3,7 @@ import path from "path";
 import sift from "sift";
 import { fileURLToPath } from "url";
 import gql from 'graphql-tag';
+import { getCachedResponse, saveToCache } from './database.js';
 // Read the schema file
 import {WhoisAPI} from './whois-api.js'
 
@@ -12,18 +13,7 @@ const schema = fs.readFileSync(
 );
 
 export const typeDefs = gql(schema);
-/*
-export const resolvers = {
-    Query: {
-      ip: async (_: any, { address }: { address: string }, { dataSources }: { dataSources: any }) => {
-        return dataSources.whoisAPI.getIP(address);
-      },
-      website: async (_: any, { url }: { url: string }, { dataSources }: { dataSources: any }) => {
-        return dataSources.whoisAPI.getWebsite(url);
-      },
-    },
-  };
-  */
+
   interface IP {
     address: string;
     whois: WHOIS;
@@ -87,7 +77,7 @@ export const resolvers = {
       website: Website | null;
     }
     
-    function mapJsonToSchema(json: any): WHOIS {
+    export function mapJsonToSchema(json: any): WHOIS {
       // Default values for location and IP details in case they are missing
       const defaultLocation = { latitude: null, longitude: null, accuracy_radius: Infinity };
       const defaultIpDetails = { ip: null, asn_subnet: null, asn_name: null, flag_url: null };
@@ -126,28 +116,7 @@ export const resolvers = {
         abuseContactPhone: json.domain?.registrar_abuse_contact_phone || null,
         whoisServer: json.domain?.registrar_whois_server || null,
       };
-      /*
-      const registrar: Registrar = {
-        name: json.domain.registrar,
-        url: json.domain.registrar_url,
-        abuseContactEmail: json.domain.registrar_abuse_contact_email,
-        abuseContactPhone: json.domain.registrar_abuse_contact_phone,
-        whoisServer: json.domain.registrar_whois_server,
-      };
-    */
-
-      /*
-      const registrant: Person = {
-        name: json.domain.registrant_name || json.domain.admin_name,
-        email: json.domain.registrant_email || json.domain.admin_email,
-        organization: json.domain.registrant_organization || json.domain.admin_organization,
-        address: json.domain.registrant_street || json.domain.admin_street,
-        city: json.domain.registrant_city || json.domain.admin_city,
-        state: json.domain.registrant_state || json.domain.tech_state, // Assuming tech state as a fallback
-        zip: json.domain.registrant_postal_code || json.domain.admin_postal_code,
-        country: json.domain.registrant_country || json.domain.admin_country,
-      };
-    */
+  
       const registrant: Person = {
         name: json.domain?.registrant_name || json.domain?.admin_name || null,
         email: json.domain?.registrant_email || json.domain?.admin_email || null,
@@ -191,54 +160,24 @@ export const resolvers = {
     
       return whois;
     }
-    // Map Our Json Fields that we want to display to our Schema
-    /*function mapJsonToSchema(json: any): WHOIS {
-      const ipv4Location = json.ipv4.location;
-      const ipv6Location = json.ipv6.location;
-      let bestLocation = ipv4Location.accuracy_radius <= ipv6Location.accuracy_radius ? ipv4Location : ipv6Location;
-      // Get Position
-      const position: Position = {
-        latitude: bestLocation.latitude.toString(),
-        longitude: bestLocation.longitude.toString(),
-      };
-      console.log(`[schemats] mapped to position : ${JSON.stringify(position, null, 2)}`);
-      const location: Location = { position,
-        ip: json.ipv4.ip || json.ipv6.ip , 
-        network: json.ipv4.asn_subnet || json.ipv6.asn_subnet, 
-        org: json.ipv4.asn_name || json.ipv6.asn_name, 
-        flagurl: json.ipv4.flag_url || json.ipv6.flag_url
-      };
-      console.log(`[schemats] mapped to location : ${JSON.stringify(position, null, 2)}`);
-      const nameServers: NameServer[] = json.domain.name_server.map((ns: string) => ({ name: ns }));
-      const registrar: Registrar = {
-        name: json.domain.registrar,
-        url: json.domain.registrar_url,
-        abuseContactEmail: json.domain.registrar_abuse_contact_email,
-        abuseContactPhone: json.domain.registrar_abuse_contact_phone,
-        whoisServer: json.domain.registrar_whois_server,
-      };
-      const registrant: Person = {
-        name: json.domain.registrant_name || json.domain.admin_name,
-        email: json.domain.registrant_email || json.domain.admin_email,
-        organization: json.domain.registrant_organization || json.domain.admin_organization,
-        address: json.domain.registrant_street || json.domain.admin_street,
-        city: json.domain.registrant_city || json.domain.admin_city,
-        state: json.domain.registrant_state || json.domain.tech_state, // Assuming tech state as a fallback
-        zip: json.domain.registrant_postal_code || json.domain.admin_postal_code,
-        country: json.domain.registrant_country || json.domain.admin_country,
-      };
-      const whois: WHOIS = { domainName: json.domain.domain_name, domainStatus: json.domain.domain_status.toString(), registrar, creationDate: json.domain.creation_date, expirationDate: json.domain.registry_expiry_date, updatedDate: json.domain.updated_date, location, registrant, nameServers };
-      return whois;
-    }
-*/
+    
     export const resolvers = {
       Query: {
         ip: async (_:any, { address }: { address: string }, { dataSources }: { dataSources: any }) => {
           // Fetch WHOIS information for the given address
+          const cacheKey = `ip-${address}`;
+          const cachedData = await getCachedResponse(cacheKey); // 30 days
+          if (cachedData) {
+            // Return the cached response if it exists
+            return { address, whois: cachedData };
+          }
+
+
           const response = await dataSources.whoisAPI.getInformation(address);
           if (response.success && response.data) {
             // Assuming mapJsonToSchema function properly maps the API response to your schema
             const whois = mapJsonToSchema(response.data);
+            await saveToCache(cacheKey, whois,30);
             return { address, whois };
           } else {
             return null;
@@ -246,11 +185,17 @@ export const resolvers = {
         },
         website: async (_:any, { url }: { url: string }, { dataSources }: { dataSources: any }) => {
           // Fetch WHOIS information for the given URL
+            // Assuming mapJsonToSchema function properly maps the API response to your schema
+          const cacheKey = `website-${url}`;
+          const cachedData = await getCachedResponse(cacheKey);
+          if (cachedData) {
+            // Return the cached response if it exists
+            return { url, whois: cachedData };
+          }
           const response = await dataSources.whoisAPI.getInformation(url);
           if (response.success && response.data) {
-            // Assuming mapJsonToSchema function properly maps the API response to your schema
-
             const whois = mapJsonToSchema(response.data);
+            await saveToCache(cacheKey, whois,30); // 30 days
             return { url, whois };
           } else {
             return null;
@@ -258,35 +203,3 @@ export const resolvers = {
         },
       },
     };
-
-
-/*
-    export const resolvers = {
-      Query: {
-        ip: async (_parent: any, args: { address: string }) => {
-          const whoisAPI = new WhoisAPI();
-          const result = await whoisAPI.getInformation(args.address);
-          if (result.success && result.data) {
-            const whois = mapJsonToSchema(result.data);
-            const ip = { address: args.address, whois };
-            ip_items.push(ip);
-            return ip;
-          } else {
-            return null;
-          }
-        },
-        website: async (_parent: any, args: { url: string }) => {
-          const whoisAPI = new WhoisAPI();
-          const result = await whoisAPI.getInformation(args.url);
-          if (result.success && result.data) {
-            const whois = mapJsonToSchema(result.data);
-            const website = { url: args.url, whois };
-            website_items.push(website);
-            return website;
-          } else {
-            return null;
-          }
-        },
-      },
-    };
-*/
