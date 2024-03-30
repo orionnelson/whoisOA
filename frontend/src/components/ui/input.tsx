@@ -2,12 +2,13 @@ import { forwardRef, useState } from "react";
 
 import { cn } from "../../lib/utils";
 import { CgClose } from "react-icons/cg";
+import { FaSearch } from "react-icons/fa";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, children, ...props }, ref) => {
+  ({ className, type, ...props }, ref) => {
     const [expanded, setExpanded] = useState(false);
 
     return expanded ? (
@@ -33,7 +34,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         onClick={() => setExpanded(true)}
         className="size-10 flex flex-row items-center justify-center dark rounded-3xl border-violet-600 hover:border-2 hover:cursor-pointer"
       >
-        {children}
+        <FaSearch className="text-white" />
       </div>
     );
   }

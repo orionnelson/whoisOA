@@ -189,9 +189,7 @@ export function Search() {
     // </div>
 
     <div className="flex flex-row justify-center items-center gap-x-4">
-      <Input className="dark">
-        <FaSearch className="text-white" />
-      </Input>
+      <Input className="dark" />
     </div>
   );
 }
