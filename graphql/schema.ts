@@ -116,8 +116,17 @@ export const resolvers = {
       };
       console.log(`[schemats] mapped to location : ${JSON.stringify(location, null, 2)}`);
     
-      const nameServers: NameServer[] = json.domain.name_server.map((ns: string) => ({ name: ns }));
+      const nameServers: NameServer[] = json.domain?.name_server?.map((ns: string) => ({ name: ns })) || [];
+      //const nameServers: NameServer[] = json.domain.name_server.map((ns: string) => ({ name: ns }));
     
+      const registrar: Registrar = {
+        name: json.domain?.registrar || null,
+        url: json.domain?.registrar_url || null,
+        abuseContactEmail: json.domain?.registrar_abuse_contact_email || null,
+        abuseContactPhone: json.domain?.registrar_abuse_contact_phone || null,
+        whoisServer: json.domain?.registrar_whois_server || null,
+      };
+      /*
       const registrar: Registrar = {
         name: json.domain.registrar,
         url: json.domain.registrar_url,
@@ -125,7 +134,9 @@ export const resolvers = {
         abuseContactPhone: json.domain.registrar_abuse_contact_phone,
         whoisServer: json.domain.registrar_whois_server,
       };
-    
+    */
+
+      /*
       const registrant: Person = {
         name: json.domain.registrant_name || json.domain.admin_name,
         email: json.domain.registrant_email || json.domain.admin_email,
@@ -136,18 +147,47 @@ export const resolvers = {
         zip: json.domain.registrant_postal_code || json.domain.admin_postal_code,
         country: json.domain.registrant_country || json.domain.admin_country,
       };
-    
+    */
+      const registrant: Person = {
+        name: json.domain?.registrant_name || json.domain?.admin_name || null,
+        email: json.domain?.registrant_email || json.domain?.admin_email || null,
+        organization: json.domain?.registrant_organization || json.domain?.admin_organization || null,
+        address: json.domain?.registrant_street || json.domain?.admin_street || null,
+        city: json.domain?.registrant_city || json.domain?.admin_city || null,
+        state: json.domain?.registrant_state || json.domain?.tech_state || null, // Assuming tech state as a fallback
+        zip: json.domain?.registrant_postal_code || json.domain?.admin_postal_code || null,
+        country: json.domain?.registrant_country || json.domain?.admin_country || null,
+      };
+
+      
       const whois: WHOIS = { 
-        domainName: json.domain.domain_name, 
-        domainStatus: json.domain.domain_status.toString(), 
-        registrar, 
-        creationDate: json.domain.creation_date, 
-        expirationDate: json.domain.registry_expiry_date, 
-        updatedDate: json.domain.updated_date, 
+        domainName: json.domain?.domain_name || null,
+        domainStatus: json.domain?.domain_status ? json.domain.domain_status.toString() : null,
+        registrar , 
+        creationDate: json.domain?.creation_date || null, 
+        expirationDate: json.domain?.registry_expiry_date|| null, 
+        updatedDate: json.domain?.updated_date || null, 
         location, 
         registrant, 
         nameServers 
       };
+/*
+      const whois: WHOIS = { 
+        location, // Assuming the location part is unchanged and required
+        // Conditional properties
+        ...(json.domain?.domain_name && { domainName: json.domain.domain_name }),
+        ...(json.domain?.domain_status && { domainStatus: json.domain.domain_status.toString() }),
+        ...(Object.keys(registrar).length > 0 && { registrar }), // Include registrar only if it has any non-null properties
+        ...(json.domain?.creation_date && { creationDate: json.domain.creation_date }),
+        ...(json.domain?.registry_expiry_date && { expirationDate: json.domain.registry_expiry_date }),
+        ...(json.domain?.updated_date && { updatedDate: json.domain.updated_date }),
+        ...(nameServers.length > 0 && { nameServers }), // Include nameServers only if it's not empty
+        ...(json.domain?.registrant_organization && {registrant}), // Include registrant only if it has any non-null properties
+      };
+*/
+
+      
+      
     
       return whois;
     }
