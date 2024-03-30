@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaSearch } from "react-icons/fa";
+import { Input } from "../components/ui/input";
+
 const QUERY_SEARCH_COUNTRY = gql`
   query Query($url: String!) {
     website(url: $url) {
@@ -46,48 +48,48 @@ const QUERY_SEARCH_COUNTRY = gql`
   }
 `;
 
+interface WhoIS {
+  creationDate?: string;
+  domainName?: string;
+  domainStatus?: string;
+  expirationDate?: string;
+  location?: {
+    flagurl?: string;
+    ip?: string;
+    network?: string;
+    org?: string;
+    position?: {
+      latitude?: string;
+      longitude?: string;
+    };
+  };
+  nameServers?: {
+    name?: string;
+  };
+  registrant?: {
+    address?: string;
+    city?: string;
+    country?: string;
+    email?: string;
+    name?: string;
+    organization?: string;
+    state?: string;
+    zip?: string;
+  };
+  registrar?: {
+    abuseContactEmail?: string;
+    abuseContactPhone?: string;
+    name?: string;
+    url?: string;
+    whoisServer?: string;
+  };
+  updatedDate?: string;
+}
+
 export function Search() {
   const [urlSearch, setUrlSearch] = useState("");
-  const [searchCountry, { data, loading, error }] =
+  const [searchWhoIS, { data, loading, error }] =
     useLazyQuery(QUERY_SEARCH_COUNTRY);
-
-  interface WhoIS {
-    creationDate?: string;
-    domainName?: string;
-    domainStatus?: string;
-    expirationDate?: string;
-    location?: {
-      flagurl?: string;
-      ip?: string;
-      network?: string;
-      org?: string;
-      position?: {
-        latitude?: string;
-        longitude?: string;
-      };
-    };
-    nameServers?: {
-      name?: string;
-    };
-    registrant?: {
-      address?: string;
-      city?: string;
-      country?: string;
-      email?: string;
-      name?: string;
-      organization?: string;
-      state?: string;
-      zip?: string;
-    };
-    registrar?: {
-      abuseContactEmail?: string;
-      abuseContactPhone?: string;
-      name?: string;
-      url?: string;
-      whoisServer?: string;
-    };
-    updatedDate?: string;
-  }
 
   const typedData = data as {
     website: {
@@ -144,40 +146,52 @@ export function Search() {
     );
 
   return (
-    <div className="search">
-      <div className="search-box">
-        <input
-          type="text"
-          className="search-text"
-          placeholder="Enter URL from List"
-          onChange={(event: any) => {
-            setUrlSearch(event.target.value || "");
-          }}
-        />
-        <button
-          onClick={() => {
-            searchCountry({
-              variables: { url: urlSearch },
-            });
-          }}
-        >
-          {
-            <a className="search-btn">
-              <i className="fas fa-search" aria-hidden="true"></i>
-            </a>
-          }
-        </button>
-      </div>
+    // <div className="search">
+    //   <div className="search-box">
+    //     {/* <input
+    //       type="text"
+    //       className="search-text"
+    //       placeholder="Enter URL from List"
+    //       onChange={(event: any) => {
+    //         setUrlSearch(event.target.value || "");
+    //       }}
+    //     /> */}
 
-      <div className="searchCountry">
-        {loading && <h3>Data is loading...</h3>}
-        {error && (
-          <div className="countryDisplay">
-            <h3>{error.message}</h3>
-          </div>
-        )}
-        {countryDisplay}
-      </div>
+    //     <Input
+    //       type="text"
+    //       className="dark"
+    //       placeholder="Enter URL from List"
+    //       onChange={(event: any) => {
+    //         setUrlSearch(event.target.value || "");
+    //       }}
+    //       value={urlSearch}
+    //     />
+    //     <button
+    //       onClick={() => {
+    //         searchWhoIS({
+    //           variables: { url: urlSearch },
+    //         });
+    //       }}
+    //     >
+    //       <FaSearch />
+    //     </button>
+    //   </div>
+
+    //   <div className="searchCountry">
+    //     {loading && <h3>Data is loading...</h3>}
+    //     {error && (
+    //       <div className="countryDisplay">
+    //         <h3>{error.message}</h3>
+    //       </div>
+    //     )}
+    //     {countryDisplay}
+    //   </div>
+    // </div>
+
+    <div className="flex flex-row justify-center items-center gap-x-4">
+      <Input className="dark">
+        <FaSearch className="text-white" />
+      </Input>
     </div>
   );
 }
