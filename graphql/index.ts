@@ -2,7 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs, resolvers } from './schema.js';
 import { WhoisAPI } from './whois-api.js';
-
+import { startCacheUpdateCronJob } from './dbcachecron/cacheupdate.js';
 
 const ports: string = process.env.APOLLO_PORT || '5000'
 const port: number = parseInt(ports,10)
@@ -64,3 +64,4 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`🚀  Server ready at: ${url}`);
+startCacheUpdateCronJob();
