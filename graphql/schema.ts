@@ -87,249 +87,134 @@ export const resolvers = {
       website: Website | null;
     }
     
-  /*
-  // A schema is a collection of type definitions (hence "typeDefs")
-  // that together define the "shape" of queries that are executed against
-  // your data.
-  export const typeDefs = `#graphql
-    # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-  
-    # This "Book" type defines the queryable fields for every book in our data source.
-    type Book {
-      title: String
-      author: String
-    }
-  
-    # The "Query" type is special: it lists all of the available queries that
-    # clients can execute, along with the return type for each. In this
-    # case, the "books" query returns an array of zero or more Books (defined above).
-    type Query {
-      books: [Book]
-    }
-  `;
-  
-  const books = [
-    {
-      title: 'The Awakening',
-      author: 'Kate Chopin',
-    },
-    {
-      title: 'City of Glass',
-      author: 'Paul Auster',
-    },
-  ];
-  // Resolvers define how to fetch the types defined in your schema.
-  // This resolver retrieves books from the "books" array above.
-  export const resolvers = {
-    Query: {
-      books: () => books,
-    },
-  };
-  */
-  const ip_items: IP[] = [
-    {
-      "address": "192.0.2.1",
-      "whois": {
-        "domainName": "EXAMPLE.COM",
-        "domainStatus": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
-        "registrar": {
-          "name": "Registrar, Inc.",
-          "url": "http://www.registrar.example",
-          "abuseContactEmail": "abuse@example.com",
-          "abuseContactPhone": "+1.5555555555",
-          "whoisServer": "whois.registrar.example"
-        },
-        "creationDate": "1995-08-14T04:00:00Z",
-        "expirationDate": "2022-08-13T04:00:00Z",
-        "updatedDate": "2021-08-15T04:00:00Z",
-        "location": {
-          "position": {
-            "latitude": "37.751",
-            "longitude": "-97.822"
-          },
-          "ip": "192.0.2.1",
-          "network": "192.0.2.0/24",
-          "org": "Example Corp.",
-          "flagurl": "https://ipworld.info/static/flags/us.png"
-        },
-        "registrant": {
-          "name": "John Doe",
-          "email": "johndoe@example.com",
-          "organization": "Example Corp.",
-          "address": "123 Main St.",
-          "city": "Anytown",
-          "state": "CA",
-          "zip": "90210",
-          "country": "US"
-        },
-        "nameServers": [
-          {
-            "name": "ns1.example.com"
-          },
-          {
-            "name": "ns2.example.com"
-          }
-        ]
-      }
-    },
-    {
-      "address": "203.0.113.1",
-      "whois": {
-        "domainName": "EXAMPLE.NET",
-        "domainStatus": "clientHold https://icann.org/epp#clientHold",
-        "registrar": {
-          "name": "Registrar, Inc.",
-          "url": "http://www.registrar.example",
-          "abuseContactEmail": "abuse@example.com",
-          "abuseContactPhone": "+1.5555555555",
-          "whoisServer": "whois.registrar.example"
-        },
-        "creationDate": "2000-01-01T00:00:00Z",
-        "expirationDate": "2023-01-01T00:00:00Z",
-        "updatedDate": "2022-01-01T00:00:00Z",
-        "location": {
-          "position": {
-            "latitude": "35.6895",
-            "longitude": "139.6917"
-          },
-          "ip": "203.0.113.1",
-          "network": "203.0.113.0/24",
-          "org": "Example Corp.",
-          "flagurl": "https://ipworld.info/static/flags/jp.png"
-        },
-        "registrant": {
-          "name": "Jane Smith",
-          "email": "janesmith@example.net",
-          "organization": "Example Corp.",
-          "address": "456 Second St.",
-          "city": "Anytown",
-          "state": "CA",
-          "zip": "90210",
-          "country": "US"
-        },
-        "nameServers": [
-          {
-            "name": "ns1.example.net"
-          },
-          {
-            "name": "ns2.example.net"
-          }
-        ]
-      }
-    }
-    ];
-  
-  const website_items: Website[] = [
-      {
-        "url": "https://www.example.com",
-        "whois": {
-          "domainName": "example.com",
-          "domainStatus": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
-          "registrar": {
-            "name": "Registrar Name",
-            "url": "https://www.registrar.com",
-            "abuseContactEmail": "abuse@registrar.com",
-            "abuseContactPhone": "+1.1234567890",
-            "whoisServer": "whois.registrar.com"
-          },
-          "creationDate": "2020-01-01T00:00:00Z",
-          "expirationDate": "2022-01-01T00:00:00Z",
-          "updatedDate": "2021-01-01T00:00:00Z",
-          "location": {
-            "position": {
-              "latitude": "37.7749",
-              "longitude": "-122.4194"
-            },
-            "ip": "192.0.2.1",
-            "network": "192.0.2.0/24",
-            "org": "Example Inc.",
-            "flagurl": "https://ipworld.info/static/flags/us.png"
-          },
-          "registrant": {
-            "name": "John Doe",
-            "email": "john.doe@example.com",
-            "organization": "Example Inc.",
-            "address": "123 Main St.",
-            "city": "San Francisco",
-            "state": "CA",
-            "zip": "94105",
-            "country": "US"
-          },
-          "nameServers": [
-            {
-              "name": "ns1.example.com"
-            },
-            {
-              "name": "ns2.example.com"
-            }
-          ]
-        }
-      },
-      {
-        "url": "https://www.example.org",
-        "whois": {
-          "domainName": "example.org",
-          "domainStatus": "clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited",
-          "registrar": {
-            "name": "Registrar Name",
-            "url": "https://www.registrar.org",
-            "abuseContactEmail": "abuse@registrar.org",
-            "abuseContactPhone": "+1.9876543210",
-            "whoisServer": "whois.registrar.org"
-          },
-          "creationDate": "2010-05-01T00:00:00Z",
-          "expirationDate": "2025-05-01T00:00:00Z",
-          "updatedDate": "2022-01-01T00:00:00Z",
-          "location": {
-            "position": {
-              "latitude": "51.5074",
-              "longitude": "-0.1278"
-            },
-            "ip": "203.0.113.1",
-            "network": "203.0.112.0/22",
-            "org": "Example Organization",
-            "flagurl": "https://ipworld.info/static/flags/gb.png"
-          },
-          "registrant": {
-            "name": "Jane Smith",
-            "email": "jane.smith@example.org",
-            "organization": "Example Organization",
-            "address": "1 Oxford St.",
-            "city": "London",
-            "state": "",
-            "zip": "W1D 1LD",
-            "country": "GB"
-          },
-          "nameServers": [
-            {
-              "name": "ns1.example.org"
-            },
-            {
-              "name": "ns2.example.org"
-            }
-          ]
-        }
-      }
-    ];
-    // Map Our Json Fields that we want to display to our Schema
     function mapJsonToSchema(json: any): WHOIS {
-      const position: Position = { latitude: json.latitude, longitude: json.longitude };
-      const location: Location = { position, ip: json.ip, network: json.network, org: json.org, flagurl: json.flag };
-      const nameServer: NameServer = { name: json.name_server };
-      const registrar: Registrar = { name: json.registrar_url, url: json.registrar_url, abuseContactEmail: json.registrar_abuse_contact_email, abuseContactPhone: json.registrar_abuse_contact_phone, whoisServer: json.registrar_whois_server };
-      const registrant: Person = { name: json.registrant_name, email: json.registrant_email, organization: json.registrant_organization, address: json.registrant_street, city: json.registrant_city, state: json.registrant_state, zip: json.registrant_postal_code, country: json.registrant_country };
-      const nameServers: NameServer[] = [nameServer];
-      const whois: WHOIS = { domainName: json.domain_name, domainStatus: json.domain_status, registrar, creationDate: json.creation_date, expirationDate: json.registry_expiry_date, updatedDate: json.updated_date, location, registrant, nameServers };
+      // Default values for location and IP details in case they are missing
+      const defaultLocation = { latitude: null, longitude: null, accuracy_radius: Infinity };
+      const defaultIpDetails = { ip: null, asn_subnet: null, asn_name: null, flag_url: null };
+    
+      // Safely attempt to access IPv4 and IPv6 details, defaulting to safe values if missing
+      const ipv4Location = json.ipv4?.location || defaultLocation;
+      const ipv6Location = json.ipv6?.location || defaultLocation;
+      let bestLocation = ipv4Location.accuracy_radius <= ipv6Location.accuracy_radius ? ipv4Location : ipv6Location;
+    
+      // Check for the existence of latitude and longitude before converting to string
+      const position: Position = {
+        latitude: bestLocation.latitude?.toString() || null,
+        longitude: bestLocation.longitude?.toString() || null,
+      };
+      console.log(`[schemats] mapped to position : ${JSON.stringify(position, null, 2)}`);
+    
+      const ipv4Details = json.ipv4 || defaultIpDetails;
+      const ipv6Details = json.ipv6 || defaultIpDetails;
+    
+      const location: Location = { 
+        position,
+        ip: ipv4Details.ip || ipv6Details.ip, 
+        network: ipv4Details.asn_subnet || ipv6Details.asn_subnet, 
+        org: ipv4Details.asn_name || ipv6Details.asn_name, 
+        flagurl: ipv4Details.flag_url || ipv6Details.flag_url
+      };
+      console.log(`[schemats] mapped to location : ${JSON.stringify(location, null, 2)}`);
+    
+      const nameServers: NameServer[] = json.domain.name_server.map((ns: string) => ({ name: ns }));
+    
+      const registrar: Registrar = {
+        name: json.domain.registrar,
+        url: json.domain.registrar_url,
+        abuseContactEmail: json.domain.registrar_abuse_contact_email,
+        abuseContactPhone: json.domain.registrar_abuse_contact_phone,
+        whoisServer: json.domain.registrar_whois_server,
+      };
+    
+      const registrant: Person = {
+        name: json.domain.registrant_name || json.domain.admin_name,
+        email: json.domain.registrant_email || json.domain.admin_email,
+        organization: json.domain.registrant_organization || json.domain.admin_organization,
+        address: json.domain.registrant_street || json.domain.admin_street,
+        city: json.domain.registrant_city || json.domain.admin_city,
+        state: json.domain.registrant_state || json.domain.tech_state, // Assuming tech state as a fallback
+        zip: json.domain.registrant_postal_code || json.domain.admin_postal_code,
+        country: json.domain.registrant_country || json.domain.admin_country,
+      };
+    
+      const whois: WHOIS = { 
+        domainName: json.domain.domain_name, 
+        domainStatus: json.domain.domain_status.toString(), 
+        registrar, 
+        creationDate: json.domain.creation_date, 
+        expirationDate: json.domain.registry_expiry_date, 
+        updatedDate: json.domain.updated_date, 
+        location, 
+        registrant, 
+        nameServers 
+      };
+    
       return whois;
     }
-
+    // Map Our Json Fields that we want to display to our Schema
+    /*function mapJsonToSchema(json: any): WHOIS {
+      const ipv4Location = json.ipv4.location;
+      const ipv6Location = json.ipv6.location;
+      let bestLocation = ipv4Location.accuracy_radius <= ipv6Location.accuracy_radius ? ipv4Location : ipv6Location;
+      // Get Position
+      const position: Position = {
+        latitude: bestLocation.latitude.toString(),
+        longitude: bestLocation.longitude.toString(),
+      };
+      console.log(`[schemats] mapped to position : ${JSON.stringify(position, null, 2)}`);
+      const location: Location = { position,
+        ip: json.ipv4.ip || json.ipv6.ip , 
+        network: json.ipv4.asn_subnet || json.ipv6.asn_subnet, 
+        org: json.ipv4.asn_name || json.ipv6.asn_name, 
+        flagurl: json.ipv4.flag_url || json.ipv6.flag_url
+      };
+      console.log(`[schemats] mapped to location : ${JSON.stringify(position, null, 2)}`);
+      const nameServers: NameServer[] = json.domain.name_server.map((ns: string) => ({ name: ns }));
+      const registrar: Registrar = {
+        name: json.domain.registrar,
+        url: json.domain.registrar_url,
+        abuseContactEmail: json.domain.registrar_abuse_contact_email,
+        abuseContactPhone: json.domain.registrar_abuse_contact_phone,
+        whoisServer: json.domain.registrar_whois_server,
+      };
+      const registrant: Person = {
+        name: json.domain.registrant_name || json.domain.admin_name,
+        email: json.domain.registrant_email || json.domain.admin_email,
+        organization: json.domain.registrant_organization || json.domain.admin_organization,
+        address: json.domain.registrant_street || json.domain.admin_street,
+        city: json.domain.registrant_city || json.domain.admin_city,
+        state: json.domain.registrant_state || json.domain.tech_state, // Assuming tech state as a fallback
+        zip: json.domain.registrant_postal_code || json.domain.admin_postal_code,
+        country: json.domain.registrant_country || json.domain.admin_country,
+      };
+      const whois: WHOIS = { domainName: json.domain.domain_name, domainStatus: json.domain.domain_status.toString(), registrar, creationDate: json.domain.creation_date, expirationDate: json.domain.registry_expiry_date, updatedDate: json.domain.updated_date, location, registrant, nameServers };
+      return whois;
+    }
+*/
     export const resolvers = {
       Query: {
-        ip: (_parent: any, args: { address: string }) => {
-          return ip_items.find((ip) => ip.address === args.address) ?? null;
+        ip: async (_:any, { address }: { address: string }, { dataSources }: { dataSources: any }) => {
+          // Fetch WHOIS information for the given address
+          const response = await dataSources.whoisAPI.getInformation(address);
+          if (response.success && response.data) {
+            // Assuming mapJsonToSchema function properly maps the API response to your schema
+            const whois = mapJsonToSchema(response.data);
+            return { address, whois };
+          } else {
+            return null;
+          }
         },
-        website: (_parent: any, args: { url: string }) => {
-          return website_items.find((site) => site.url === args.url) ?? null;
+        website: async (_:any, { url }: { url: string }, { dataSources }: { dataSources: any }) => {
+          // Fetch WHOIS information for the given URL
+          const response = await dataSources.whoisAPI.getInformation(url);
+          if (response.success && response.data) {
+            // Assuming mapJsonToSchema function properly maps the API response to your schema
+
+            const whois = mapJsonToSchema(response.data);
+            return { url, whois };
+          } else {
+            return null;
+          }
         },
       },
     };
