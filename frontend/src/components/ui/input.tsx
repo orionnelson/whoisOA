@@ -15,7 +15,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="relative">
         <div className="absolute top-3 right-2">
           <CgClose
-            className="hover:text-violet-500 hover:cursor-pointer"
+            className="hover:text-violet-500 hover:cursor-pointer text-white"
             onClick={() => setExpanded(false)}
           />
         </div>
@@ -31,10 +31,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       </div>
     ) : (
       <div
-        onClick={() => setExpanded(true)}
+        onClick={() => {
+          setExpanded(true);
+          // also select the text in the input field
+        }}
         className="size-10 flex flex-row items-center justify-center dark rounded-3xl border-violet-600 hover:border-2 hover:cursor-pointer"
       >
-        <FaSearch className="text-white" />
+        <FaSearch className="text-white text-sm" />
       </div>
     );
   }
