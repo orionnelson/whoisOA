@@ -20,6 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     }, [expanded, ref, internalRef]);
 
     return expanded ? (
+      // if expanded
       <div className="relative">
         <div className="absolute top-3 right-2">
           <CgClose
@@ -38,6 +39,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         />
       </div>
     ) : (
+      // if not expanded
       <div
         onClick={() => {
           setExpanded(true);
