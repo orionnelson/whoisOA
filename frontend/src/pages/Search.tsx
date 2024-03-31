@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createRef, useState } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import { FaSearch } from "react-icons/fa";
 import { Input } from "../components/ui/input";
@@ -88,6 +88,9 @@ interface WhoIS {
 
 export function Search() {
   const [urlSearch, setUrlSearch] = useState("");
+
+  const inputRef = createRef<HTMLInputElement>();
+
   const [searchWhoIS, { data, loading, error }] =
     useLazyQuery(QUERY_SEARCH_COUNTRY);
 
@@ -188,8 +191,9 @@ export function Search() {
     //   </div>
     // </div>
 
+    // ShadCN: https://ui.shadcn.com/docs/components/input
     <div className="flex flex-row justify-center items-center gap-x-4">
-      <Input className="dark" />
+      <Input className="dark" ref={inputRef} />
     </div>
   );
 }
